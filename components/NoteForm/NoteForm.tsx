@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 
 import css from './NoteForm.module.css';
 import { ChangeEvent, useEffect, useId } from 'react';
-import { createNote } from '@/lib/api';
+import { createNote } from '@/lib/api/api';
 import type { NewNote } from '../../types/note';
 import { useRouter } from 'next/navigation';
 import toast, { Toaster } from 'react-hot-toast';
