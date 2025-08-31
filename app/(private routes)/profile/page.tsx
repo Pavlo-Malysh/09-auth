@@ -1,31 +1,25 @@
+
 import Image from "next/image";
 import css from './ProfilePage.module.css';
 import Link from "next/link";
 import { Metadata } from "next";
-
-type Props = {
-    params: Promise<{ id: string }>
-}
+import { getServerMe } from "@/lib/api/serverApi";
 
 
-
-export const generateMetadata = async ({ params }: Props): Promise<Metadata> => {
-    const { id } = await params;
-    console.log('META ID', id);
-
-    // const res = await fetchNoteById(id)
+export const generateMetadata = async (): Promise<Metadata> => {
+    const { data } = await getServerMe();
 
     return {
-        title: 'res.title',
-        description: 'res.content.slice(0, 15)',
+        title: `${data.username}`,
+        description: `Profile: ${data.username}`,
         openGraph: {
-            title: 'res.title',
-            description: 'res.content.slice(0, 10)',
-            url: `https://08-zustand-2id0t83qf-pavlos-projects-5ce3b785.vercel.app/notes/${id}`,
-            siteName: "NoteHub",
+            title: `${data.username}`,
+            description: `Profile: ${data.username}`,
+            url: `https://08-zustand-2id0t83qf-pavlos-projects-5ce3b785.vercel.app/profile`,
+            siteName: "Profile User",
             images: [
                 {
-                    url: 'https://ac.goit.global/fullstack/react/notehub-og-meta.jpg',
+                    url: `${data.avatar}`,
                     width: 1200,
                     height: 630,
                     alt: `Profile`
@@ -40,32 +34,37 @@ export const generateMetadata = async ({ params }: Props): Promise<Metadata> => 
 
 
 
-const Profile = () => {
+const Profile = async () => {
+
+    const { data } = await getServerMe();
+
+
 
     return (
         <main className={css.mainContent}>
             <div className={css.profileCard}>
                 <div className={css.header}>
                     <h1 className={css.formTitle}>Profile Page</h1>
-                    <Link href="" className={css.editProfileButton}>
+                    <Link href="/profile/edit" className={css.editProfileButton}>
                         Edit Profile
                     </Link>
                 </div>
                 <div className={css.avatarWrapper}>
                     <Image
-                        src="/Avatar"
+                        src={`${data.avatar}`}
                         alt="User Avatar"
                         width={120}
                         height={120}
                         className={css.avatar}
+                        priority={true}
                     />
                 </div>
                 <div className={css.profileInfo}>
                     <p>
-                        Username: your_username
+                        Username: {data.username}
                     </p>
                     <p>
-                        Email: your_email@example.com
+                        Email: {data.email}
                     </p>
                 </div>
             </div>

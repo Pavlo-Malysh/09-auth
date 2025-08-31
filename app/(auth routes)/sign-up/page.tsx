@@ -3,22 +3,51 @@
 import { RegisterRequestData, register } from '@/lib/api/clientApi';
 import css from './SignUp.module.css';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { useAuthStore } from '@/lib/store/authStore';
+import { ApiError } from '@/lib/api/api';
+
+
 
 const SignUp = () => {
     const router = useRouter();
-    const handleSignUp = async (formData: FormData) => {
-        const data = Object.fromEntries(formData) as RegisterRequestData
-        const response = await register(data)
-        console.log('REGISTER', response);
-        if (response) {
-            router.push('/profile');
+    const [error, setError] = useState('');
+
+    const setUser = useAuthStore((state) => state.setUser);
+
+
+    const handleSubmit = async (formData: FormData) => {
+
+        try {
+            const data = Object.fromEntries(formData) as RegisterRequestData
+            const response = await register(data)
+            console.log('REGISTER', response);
+
+            if (response) {
+                setUser(response)
+                router.push('/profile');
+            } else {
+                setError("Invalid email or password");
+            }
+
+
+        } catch (error) {
+            setError(
+                (error as ApiError).response?.data?.error ??
+                (error as ApiError).message ??
+                'Oops... some error'
+            )
+            console.log('ERROR', error);
+
         }
+
+
     }
 
     return (
         <main className={css.mainContent}>
             <h1 className={css.formTitle}>Sign up</h1>
-            <form className={css.form} action={handleSignUp}>
+            <form className={css.form} action={handleSubmit}>
                 <div className={css.formGroup}>
                     <label htmlFor="email">Email</label>
                     <input id="email" type="email" name="email" className={css.input} required />
@@ -35,7 +64,7 @@ const SignUp = () => {
                     </button>
                 </div>
 
-                <p className={css.error}>Error</p>
+                <p className={css.error}>{error}</p>
             </form>
         </main>
 
