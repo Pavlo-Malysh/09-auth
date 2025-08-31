@@ -5,7 +5,7 @@ import css from './SignUp.module.css';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useAuthStore } from '@/lib/store/authStore';
-import { ApiError } from '@/lib/api/api';
+import { ApiError } from '@/lib/api/clientApi';
 
 
 
