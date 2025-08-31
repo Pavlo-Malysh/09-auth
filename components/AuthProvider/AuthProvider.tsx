@@ -26,9 +26,10 @@ const AuthProvider = ({ children }: Props) => {
             } else {
                 clearIsAuthenticated();
             };
+            setIsLoading(false);
         };
         fetchUser();
-        setIsLoading(false)
+
     }, [setUser, clearIsAuthenticated]);
 
     if (isLoading) return <Loader />

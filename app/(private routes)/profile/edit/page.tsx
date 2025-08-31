@@ -18,7 +18,7 @@ const EditProfile = () => {
         }
         if (newUserName && user) {
             const payload = {
-                email: user.email,
+                ...user,
                 username: newUserName,
             }
 
